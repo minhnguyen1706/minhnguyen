@@ -1,0 +1,345 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.IO;
+using System.Runtime.Remoting.Contexts;
+
+namespace QuanLySinhVien
+{
+    class Program
+    {
+        public static string connectionString = "Data Source=MIO;Initial Catalog=assighment_C#;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;";
+
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            while (true)
+            {
+                Console.WriteLine("||==================== Menu ==================||");
+                Console.WriteLine("||      CHƯƠNG TRÌNH QUẢN LÝ HỌC VIÊN         ||");
+                Console.WriteLine("||                1. Thêm Lớp                 ||");
+                Console.WriteLine("||             2. Thêm Sinh Viên              ||");
+                Console.WriteLine("||       3. Hiển Thị Danh Sách Sinh Viên      ||");
+                Console.WriteLine("||   4. Tìm Kiếm Sinh Viên Theo Khoảng Điểm   ||");
+                Console.WriteLine("||       5. Cập Nhật Sinh Viên Theo ID        ||");
+                Console.WriteLine("||   6. Hiển Thị Sinh Viên (Sắp Xếp Theo Điểm)||");
+                Console.WriteLine("||   7. Hiển Thị 5 Sinh Viên Có Điểm Cao Nhất ||");
+                Console.WriteLine("||    8. Tính và Lưu Điểm Trung Bình Theo Lớp ||");
+                Console.WriteLine("||                  9. Thoát                  ||");
+                Console.WriteLine("||============================================||");
+                Console.Write("Nhập lựa chọn của bạn từ 1-9: ");
+
+                string luaChon = Console.ReadLine();
+
+                switch (luaChon)
+                {
+                    case "1":
+                        ThemLop();
+                        break;
+                    case "2":
+                        ThemSinhVien();
+                        break;
+                    case "3":
+                        HienThiSinhVien();
+                        break;
+                    case "4":
+                        TimKiemSinhVienTheoKhoangDiem();
+                        break;
+                    case "5":
+                        CapNhatSinhVien();
+                        break;
+                    case "6":
+                        HienThiSinhVienTheoDiem();
+                        break;
+                    case "7":
+                        HienThi5SinhVienDiemCaoNhat();
+                        break;
+                    case "8":
+                        TinhVaLuuDiemTrungBinh();
+                        break;
+                    case "9":
+                        return;
+                    default:
+                        Console.WriteLine("Lựa chọn không hợp lệ! Vui lòng thử lại.");
+                        break;
+                }
+            }
+        }
+
+        // Thêm lớp
+        static void ThemLop()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write("Nhập tên lớp: ");
+            string nameClass = Console.ReadLine();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "INSERT INTO Class (NameClass) VALUES (@NameClass)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NameClass", nameClass);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Thêm lớp thành công!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Thêm lớp thất bại.");
+                    }
+                }
+            }
+        }
+        // Thêm SV
+        static void ThemSinhVien()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write("Nhập tên sinh viên: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Nhập điểm (0-10): ");
+            float mark;
+            while (!float.TryParse(Console.ReadLine(), out mark) || mark < 0 || mark > 10)
+            {
+                Console.WriteLine("Điểm không hợp lệ. Vui lòng nhập số từ 0 đến 10.");
+                Console.Write("Nhập điểm (0-10): ");
+            }
+
+            Console.Write("Nhập email: ");
+            string email = Console.ReadLine();
+
+            Console.Write("Nhập ID lớp : ");
+            string idClass = Console.ReadLine();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string checkQuery = "SELECT COUNT(*) FROM Class WHERE IdClass = @IdClass";
+                using (SqlCommand checkCommand = new SqlCommand(checkQuery, connection))
+                {
+                    //checkCommand.Parameters.AddWithValue("@IdClass", idClass);
+                    //int classExists = (int)checkCommand.ExecuteScalar();
+                    checkCommand.Parameters.AddWithValue("@Idclass", idClass);
+                    int classExists = (int)checkCommand.ExecuteScalar();
+
+                    if (classExists == 0)
+                    {
+                        Console.WriteLine($"Lớp với IdClass '{idClass}' không tồn tại. Vui lòng nhập lại.");
+                        return;
+                    }
+                }
+
+                string query = "INSERT INTO Student (Name, Mark, Email, IdClass) VALUES (@Name, @Mark, @Email, @IdClass)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", name);
+                    command.Parameters.AddWithValue("@Mark", mark);
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@IdClass", idClass); 
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Thêm sinh viên thành công!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Thêm sinh viên thất bại.");
+                    }
+                }
+            }
+        }
+        // Hiển thị sinh viên
+        static void HienThiSinhVien()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT StId, Name, Mark, Email, IdClass FROM Student";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        Console.WriteLine("Danh sách sinh viên:");
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"ID: {reader["StId"]}, Tên: {reader["Name"]}, Điểm: {reader["Mark"]}, Email: {reader["Email"]}, ID lớp: {reader["IdClass"]}");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Chức năng tìm kiếm sinh viên theo khoảng điểm 
+        static void TimKiemSinhVienTheoKhoangDiem()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write("Nhập điểm thấp nhất: ");
+            float minMark = float.Parse(Console.ReadLine());
+
+            Console.Write("Nhập điểm cao nhất: ");
+            float maxMark = float.Parse(Console.ReadLine());
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT StId, Name, Mark, Email, IdClass FROM Student WHERE Mark BETWEEN @MinMark AND @MaxMark";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@MinMark", minMark);
+                    command.Parameters.AddWithValue("@MaxMark", maxMark);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                        {
+                            Console.WriteLine("Không có sinh viên nào trong khoảng điểm này.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Danh sách sinh viên trong khoảng điểm:");
+                            while (reader.Read())
+                            {
+                                Console.WriteLine($"ID: {reader["StId"]}, Tên: {reader["Name"]}, Điểm: {reader["Mark"]}, Email: {reader["Email"]},ID lớp: {reader["IdClass"]}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Chức năng cập nhật thông tin sinh viên theo ID 
+        static void CapNhatSinhVien()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write("Nhập ID sinh viên cần cập nhật: ");
+            int studentId = int.Parse(Console.ReadLine());
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string checkQuery = "SELECT COUNT(*) FROM Student WHERE StId = @StId";
+                using (SqlCommand checkCommand = new SqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@StId", studentId);
+                    int studentExists = (int)checkCommand.ExecuteScalar();
+
+                    if (studentExists == 0)
+                    {
+                        Console.WriteLine($"Sinh viên với ID '{studentId}' không tồn tại.");
+                        return;
+                    }
+                }
+
+                Console.Write("Nhập tên mới: ");
+                string newName = Console.ReadLine();
+                Console.Write("Nhập điểm mới (0-10): ");
+                float newMark = float.Parse(Console.ReadLine());
+                Console.Write("Nhập email mới: ");
+                string newEmail = Console.ReadLine();
+                Console.Write("Nhập ID lớp mới: ");
+                string newIdClass = Console.ReadLine();
+
+                string updateQuery = "UPDATE Student SET Name = @Name, Mark = @Mark, Email = @Email, IdClass = @IdClass WHERE StId = @StId";
+                using (SqlCommand updateCommand = new SqlCommand(updateQuery, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@Name", newName);
+                    updateCommand.Parameters.AddWithValue("@Mark", newMark);
+                    updateCommand.Parameters.AddWithValue("@Email", newEmail);
+                    updateCommand.Parameters.AddWithValue("@IdClass", newIdClass);
+                    updateCommand.Parameters.AddWithValue("@StId", studentId);
+
+                    int rowsAffected = updateCommand.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Cập nhật thông tin sinh viên thành công!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cập nhật thất bại.");
+                    }
+                }
+            }
+        }
+
+
+        // Chức năng hiển thị sinh viên theo điểm 
+        static void HienThiSinhVienTheoDiem()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT StId, Name, Mark, Email, IdClass FROM Student ORDER BY Mark DESC";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        Console.WriteLine("Danh sách sinh viên theo thứ tự điểm từ cao đến thấp:");
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"ID: {reader["StId"]}, Tên: {reader["Name"]}, Điểm: {reader["Mark"]}, Email: {reader["Email"]},ID lớp: {reader["IdClass"]}");
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Chức năng hiển thị 5 sinh viên có điểm cao nhất 
+        static void HienThi5SinhVienDiemCaoNhat()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT TOP 5 StId, Name, Mark, Email, IdClass FROM Student ORDER BY Mark DESC";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        Console.WriteLine("5 sinh viên có điểm cao nhất:");
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"ID: {reader["StId"]}, Tên: {reader["Name"]}, Điểm: {reader["Mark"]}, Email: {reader["Email"]},ID lớp: {reader["IdClass"]}");
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Chức năng tính và lưu điểm trung bình 
+        static void TinhVaLuuDiemTrungBinh()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT IdClass, AVG(Mark) AS AverageMark FROM Student GROUP BY IdClass";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        using (StreamWriter writer = new StreamWriter("minhnktd00814_assighment_C#2.txt"))
+                        {
+                            writer.WriteLine("Điểm trung bình theo lớp:");
+                            while (reader.Read())
+                            {
+                                string idClass = reader["IdClass"].ToString();
+                                string avgMark = reader["AverageMark"].ToString();
+                                writer.WriteLine($"Lớp: {idClass}, Điểm trung bình: {avgMark}");
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Đã tính và lưu điểm trung bình theo lớp vào file minhnktd00814_assighment_C#2.txt.");
+        }
+
+    }
+}
