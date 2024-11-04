@@ -1,0 +1,228 @@
+let slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+    showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+    showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";  
+    dots[slideIndex-1].className += " active";
+}
+function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let itemIndex = cart.findIndex(item => item.name === name);
+
+    if (itemIndex !== -1) {
+        cart[itemIndex].quantity += 1;
+    } else {
+        cart.push({ name, price, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${name} đã được thêm vào giỏ hàng.`);
+    loadCart();
+}
+
+function loadCart() {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotalElement = document.getElementById('cart-total');
+    const VAT_RATE = 0.1; 
+    let discount = 0;
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cartItemsContainer.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+        const cartItemElement = document.createElement('div');
+        cartItemElement.classList.add('cart-item');
+        cartItemElement.innerHTML = `
+            <span>${item.name}</span>
+            <span>${formatCurrency(item.price)}</span>
+            <span>${item.quantity}</span>
+            <button class="remove-item" data-name="${item.name}">Xóa</button>
+        `;
+        cartItemsContainer.appendChild(cartItemElement);
+        total += item.price * item.quantity;
+    });
+
+    const vat = total * VAT_RATE;
+    total += vat;
+    total -= discount;
+    cartTotalElement.textContent = formatCurrency(total);
+}
+
+function formatCurrency(amount) {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+function removeFromCart(name) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(item => item.name !== name);
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart();
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const discountCodeInput = document.getElementById('discount-code');
+    const applyDiscountButton = document.getElementById('apply-discount');
+    const checkoutButton = document.getElementById('checkout');
+
+    applyDiscountButton.addEventListener('click', () => {
+        const code = discountCodeInput.value;
+        applyDiscountCode(code);
+    });
+
+    checkoutButton.addEventListener('click', () => {
+        alert('Thanh toán thành công!');
+        localStorage.removeItem('cart');
+        loadCart();
+    });
+
+    cartItemsContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-item')) {
+            const name = event.target.dataset.name;
+            removeFromCart(name);
+        }
+    });
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const product = button.closest('.product');
+            const name = product.dataset.name;
+            const price = parseInt(product.dataset.price, 10);
+            addToCart(name, price);
+        });
+    });
+
+    loadCart();
+});
+function updateCartQuantity() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartQuantityElement = document.getElementById('cart-quantity');
+    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    if (cartQuantityElement) {
+        cartQuantityElement.textContent = totalQuantity;
+    }
+}
+
+function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let itemIndex = cart.findIndex(item => item.name === name);
+
+    if (itemIndex !== -1) {
+        cart[itemIndex].quantity += 1;
+    } else {
+        cart.push({ name, price, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${name} đã được thêm vào giỏ hàng.`);
+    updateCartQuantity();
+    loadCart();
+}
+
+function loadCart() {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotalElement = document.getElementById('cart-total');
+    const VAT_RATE = 0.1; 
+    let discount = 0;
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cartItemsContainer.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+        const cartItemElement = document.createElement('div');
+        cartItemElement.classList.add('cart-item');
+        cartItemElement.innerHTML = `
+            <span>${item.name}</span>
+            <span>${formatCurrency(item.price)}</span>
+            <span>${item.quantity}</span>
+            <button class="remove-item" data-name="${item.name}">Xóa</button>
+        `;
+        cartItemsContainer.appendChild(cartItemElement);
+        total += item.price * item.quantity;
+    });
+
+    const vat = total * VAT_RATE;
+    total += vat;
+    total -= discount;
+    cartTotalElement.textContent = formatCurrency(total);
+    updateCartQuantity();
+}
+
+function removeFromCart(name) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(item => item.name !== name);
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart();
+}
+
+function applyDiscountCode(code) {
+    const cartTotalElement = document.getElementById('cart-total');
+    let discount = 0;
+  
+
+
+    let total = parseFloat(cartTotalElement.textContent.replace(/[^\d.-]/g, ''));
+    total -= discount;
+    cartTotalElement.textContent = formatCurrency(total);
+    updateCartQuantity();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const discountCodeInput = document.getElementById('discount-code');
+    const applyDiscountButton = document.getElementById('apply-discount');
+    const checkoutButton = document.getElementById('checkout');
+
+    applyDiscountButton.addEventListener('click', () => {
+        const code = discountCodeInput.value;
+        applyDiscountCode(code);
+    });
+
+    checkoutButton.addEventListener('click', () => {
+        alert('Thanh toán thành công!');
+        localStorage.removeItem('cart');
+        loadCart();
+    });
+
+    cartItemsContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-item')) {
+            const name = event.target.dataset.name;
+            removeFromCart(name);
+        }
+    });
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const product = button.closest('.product');
+            const name = product.dataset.name;
+            const price = parseInt(product.dataset.price, 10);
+            addToCart(name, price);
+        });
+    });
+
+    loadCart();
+    updateCartQuantity();
+});
