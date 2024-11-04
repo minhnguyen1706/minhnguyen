@@ -1,0 +1,128 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const cartTotalElement = document.getElementById('cart-total');
+    const discountCodeInput = document.getElementById('discount-code');
+    const applyDiscountButton = document.getElementById('apply-discount');
+    const checkoutButton = document.getElementById('checkout-button');
+    const VAT_RATE = 0.05; 
+    let discount = 0;
+
+    function formatCurrency(value) {
+        return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    }
+
+    function loadCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let total = 0;
+
+        cartItemsContainer.innerHTML = '';
+        cart.forEach(item => {
+            const cartItemElement = document.createElement('div');
+            cartItemElement.classList.add('cart-item');
+            cartItemElement.innerHTML = `
+                <span>${item.name} - ${formatCurrency(item.price)} x ${item.quantity}</span>
+                <button class="remove-item" data-name="${item.name}">Xóa</button>
+            `;
+            cartItemsContainer.appendChild(cartItemElement);
+            total += item.price * item.quantity;
+        });
+
+        total = applyDiscountAndVAT(total);
+        cartTotalElement.textContent = formatCurrency(total);
+
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', () => {
+                const productName = button.getAttribute('data-name');
+                removeFromCart(productName);
+            });
+        });
+    }
+
+    function applyDiscountAndVAT(total) {
+        if (discount > 0) {
+            total -= total * (discount / 100);
+        }
+        const vat = total * VAT_RATE;
+        total += vat;
+        return total;
+    }
+
+    applyDiscountButton.addEventListener('click', () => {
+        const code = discountCodeInput.value.trim().toLowerCase();
+        if (code === 'sale20%') {
+            alert('Áp dụng mã giảm giá thành công')
+            discount = 20;
+        } else if (code === 'sale40%') {
+            alert('Áp dụng mã giảm giá thành công')
+            discount = 40;
+        }else if(code ==='sale70%sss'){
+            alert('Áp dụng mã giảm giá thành công')
+            discount = 70;    
+        } else {
+            discount = 0;
+            alert('Mã giảm giá không hợp lệ');
+        }
+        loadCart();
+    });
+    function clearCart(){
+       cartItemsContainer =[];
+        loadCart();
+    }
+    checkoutButton.addEventListener('click', () => {
+        if(cartItemsContainer == 0 ){
+            alert('không có bất kỳ sản phẩm nào trong giỏ')
+        }else{
+        function showPopup() {
+          const popup = document.getElementById('popup');
+            popup.style.display = 'block';
+            document.getElementById('blurBackground').style.display = 'block';
+            
+            setTimeout(() => {
+                popup.style.display = 'none';
+                blurBackground.style.display ='none';
+                window.location.href = "file:///C:/Users/Administrator/Desktop/WEB%201013/assignment1.html";
+                window.location.reload.href ="file:///C:/Users/Administrator/Desktop/WEB%201013/.vscode/giohang.html";
+            }, 3000); 
+        }
+            showPopup();
+            document.getElementById('checkout-button').addEventListener('click', () => {
+                clearCart();
+            });
+            
+}});
+loadCart();
+    function removeFromCart(productName) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = cart.filter(item => item.name !== productName);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart();
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const productElement = button.parentElement;
+            const productName = productElement.getAttribute('data-name');
+            const productPrice = parseInt(productElement.getAttribute('data-price'));
+
+            addToCart(productName, productPrice);
+        });
+    });
+
+    function addToCart(productName, productPrice) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingItem = cart.find(item => item.name === productName);
+
+        if (existingItem) {
+            existingItem.quantity++;
+        } else {
+            cart.push({ name: productName, price: productPrice, quantity: 1 });
+        }
+    }
+    function clearhang(){
+        loadCart();
+    }
+    document.getElementById('checkout-button').addEventListener('click',() =>{
+        clearhang();
+    });
+    loadCart();
+});
