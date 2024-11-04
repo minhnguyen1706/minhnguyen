@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>giỏ hàng</title>
+    <link rel="stylesheet" href="giohang.css"/>
+    <link rel="stylesheet"   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+<body>
+    <header>
+        <div class="img">
+            <a href="file:///C:/Users/Administrator/Desktop/WEB%201013/assignment1.html">
+            <img src="https://cdn.fptshop.com.vn/Uploads/Originals/2014/7/17/201407171129187887_1378267132_FPTshop.ver1.0-logo-color-BG.black.jpg", width="100px" height="auto">
+            </a>
+        </a>
+        </div>
+        <div>
+        <nav  class="menu">
+            <li><a href="#2">Danh mục</a></li>
+            <li><a href="#3">Thời gian khuyến mãi</a></li>
+            <li><a href="#4">Tìm kiếm</a></li>
+            <li><a href="#call">Liên hệ</a></li>
+        </nav>
+    </div>
+        <div class="icons">
+            <div class="user">
+                <i class="fa-solid fa-circle-user"></i>
+            </div>
+            <div class="giohang">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+        </div>
+    </header>
+    <div class="cart">
+        <h1>Giỏ hàng</h1>
+        <div class="cart-items">
+        </div>
+        <div class="cart-total">
+            <strong>Tổng cộng: <span id="cart-total">0 VND</span></strong>
+        </div>
+        <input type="text" id="discount-code" placeholder="Nhập mã giảm giá">
+        <button id="apply-discount">Áp dụng mã giảm giá</button>
+        <button id="checkout-button">Thanh toán</button>
+        <div id="blurBackground"></div>
+    </div>
+    <div id="popup"> cảm ơn quý khách</div>
+    <script src="giohang.js"></script>
+</body>
+</html>
