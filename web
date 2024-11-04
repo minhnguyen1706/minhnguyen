@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bán hàng</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+<header>
+<div class="img">
+<a href="#" onclick="location.replace()">
+<img src="https://cdn.fptshop.com.vn/Uploads/Originals/2014/7/17/201407171129187887_1378267132_FPTshop.ver1.0-logo-color-BG.black.jpg" , width="100px" height="auto">
+</a>
+</div>
+<div>
+<nav class="menu">
+<li><a href="#2">Danh mục</a></li>
+<li><a href="#3">Thời gian khuyến mãi</a></li>
+<li><a href="#4">Tìm kiếm</a></li>
+<li><a href="#call">Liên hệ</a></li>
+</nav>
+</div>
+<div class="icons">
+<div class="user">
+<i class="fa-solid fa-user"></i>
+</div>
+<div id="cart-quantity">0</div>
+<a href="giohang.html">
+<div class="giohang">
+<i class="fa-solid fa-cart-shopping"></i>
+</div>
+</a>
+</div>
+</header>
+<main>
+<section class="slideshow-container">
+<div class="mySlides fade">
+<img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/sony-10vi-dat-hang-22-7.jpg" width="100%">
+</div>
+<div class="mySlides fade">
+<img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/pre-z6-update-new-23-07-slide.png" width="100%">
+</div>
+<div class="mySlides fade">
+<img src="https://cdn.hoanghamobile.com/i/home/Uploads/2024/07/11/xiaomi-tv.png" width="100%">
+</div>
+<a class="prev" onclick="plusSlides(-1)"><</a>
+<a class="next" onclick="plusSlides(1)">></a>
+</section>
+<section class="product-list">
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.5zeQWrw6dD6Lq7Z6MT1PTwHaG5?rs=1&pid=ImgDetMain" alt="Laptop">
+<h2>LOQ 2024</h2>
+<p>19.000.000VND</p>
+<button onclick="addToCart('LOQ 2024', 19000000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://specs-tech.com/wp-content/uploads/2022/07/Asus-ROG-Phone-8-Pro.jpg" alt="Smartphone">
+<h2>Asus-ROG Phone 8 Pro</h2>
+<p>32.990.000VND</p>
+<button onclick="addToCart('Asus-ROG Phone 8 Pro', 32990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.jJz_Rme5mfQ5nEIqTyb1-AAAAA?rs=1&pid=ImgDetMain" alt="Smartphone">
+<h2>Nubia redmagic 9 pro plus</h2>
+<p>23.350.000VND</p>
+<button onclick="addToCart('Nubia redmagic 9 pro plus', 23350000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.SK5-dvvl1aFaCFkJDga-bgAAAA?rs=1&pid=ImgDetMain" alt="Smartphone">
+<h2>Blakshack 6 pro</h2>
+<p>7.990.000VND</p>
+<button onclick="addToCart('Blakshack 6 pro', 7990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.x9H0oc_eMZXIMnAGg7mmBgHaHa?rs=1&pid=ImgDetMain" alt="Smartphone">
+<h2>Honor magic 6</h2>
+<p>13.990.000VND</p>
+<button onclick="addToCart('Honor magic 6', 13990000)">Add to Cart</button>
+</div>
+<div class="product-item  ">
+<img src="https://th.bing.com/th/id/OIP.sBcZ-xnM6n1FIqYIWcqCnwHaHa?rs=1&pid=ImgDetMain" alt="Smartphone">
+<h2>nubia neo 2</h2>
+<p>4.990.000VND</p>
+<button onclick="addToCart('nubia neo 2', 4990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.Toz25MauAuqCKo5y3a5LCAHaFc?rs=1&pid=ImgDetMain" alt="Smartphone">
+<h2>Rog phone 7</h2>
+<p>12.990.000VND</p>
+<button onclick="addToCart('Rog phone 7', 12990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/R.609f3c35b211face1b25613491d64533?rik=ZwI%2bvRKexHwYTg&pid=ImgRaw&r=0" alt="Laptop">
+<h2>thinkpad x1 carbon 2017</h2>
+<p>10.990.000VND</p>
+<button onclick="addToCart('thinkpad x1 carbon 2017', 10990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.JKCGVxpYC0zXRk_lZguMAwAAAA?rs=1&pid=ImgDetMain" alt="Laptop">
+<h2>Nitro 5 tiger</h2>
+<p>25.990.000VND</p>
+<button onclick="addToCart('Nitro 5 tiger', 25990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://imagor.owtg.one/unsafe/fit-in/1000x1000/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/products/2022/4/3/DELL-XPS-15-9520-2022-thinkpro%202%203.jpeg" alt="Laptop">
+<h2>Dell XPS 15</h2>
+<p>27.990.000VND</p>
+<button onclick="addToCart('Dell XPS 15', 27990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th/id/OIP.d3_UM4pBImbmEHtwwHa0JgHaHa?rs=1&pid=ImgDetMain" alt="Laptop">
+<h2>Huawei mate X pro</h2>
+<p>29.990.000VND</p>
+<button onclick="addToCart('Huawei mate X pro', 29990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/a/i/air_m2_16gb.png" alt="Laptop">
+<h2>MacBook Pro M3 2023</h2>
+<p>30.990.000VND</p>
+<button onclick="addToCart('MacBook Pro M3 2023', 30990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/t/a/tai-nghe-khong-day-sony-wf-1000xm5.png" alt="Laptop">
+<h2>Tai nghe True Wireless Sony WF-1000XM5</h2>
+<p>5.990.000VND</p>
+<button onclick="addToCart('Tai nghe True Wireless Sony WF-1000XM5', 5990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://th.bing.com/th?id=OIF.G6eTRzurNRzP%2flMai93krA&rs=1&pid=ImgDetMain" alt="Laptop">
+<h2>Tai nghe samsung buds 3 pro</h2>
+<p>5.990.000VND</p>
+<button onclick="addToCart('Tai nghe samsung buds 3 pro', 5990000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/g/r/group_172_2.png" alt="Laptop">
+<h2>Tai nghe chụp tai Sony WH-1000XM5</h2>
+<p>6.690.000VND</p>
+<button onclick="addToCart('Tai nghe chụp tai Sony WH-1000XM5', 6690000)">Add to Cart</button>
+</div>
+<div class="product-item">
+<img src="https://cdn.akakce.com/z/huawei/huawei-freebuds-pro-3-tws-anc-gri-kulak-ici.jpg" alt="Laptop">
+<h2>Tai nghe Huawei FreeBuds Pro 3</h2>
+<p>6.990.000VND</p>
+<button onclick="addToCart('Tai nghe Huawei FreeBuds Pro 3', 6990000)">Add to Cart</button>
+</div>
+</section>
+</main>
+<footer id="call">
+<p>SĐT: 0985535555
+<br> Địa chỉ: 99 Lâm nhĩ
+</p>
+</footer>
+<script src="script.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8d355394e8c70797","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2024.10.1","token":"4fdc460e0f724a4981c33d789f799610"}' crossorigin="anonymous"></script>
+</body>
+</html>
